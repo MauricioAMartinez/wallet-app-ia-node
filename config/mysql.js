@@ -9,6 +9,15 @@ const config = {
   port: process.env.DB_PORT
 }
 
-const contection = await mysql.createConnection(config)
+async function connectToDatabase () {
+  try {
+    const connection = await mysql.createConnection(config)
+    console.log('Connected to the MySQL server.')
+    return connection
+  } catch (error) {
+    console.error('Error connecting to the MySQL server:', error)
+    throw error // Propagate the error so it can be handled by the caller
+  }
+}
 
-module.exports = { contection }
+module.exports = connectToDatabase
