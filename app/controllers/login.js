@@ -1,40 +1,36 @@
-const jwt = require('jsonwebtoken')
-const bcrypt = require('bcrypt')
-
-const Login = require('../models/Login')
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
+const { v4: uuidv4, parse: uuidParse, stringify: uuidStringify } = require('uuid');
+const Login = require('../models/Login');
 
 const auth = async (req, res) => {
-  const { email, password } = req.body
+  const { email, password } = req.body;
   try {
-    // Buscar el usuario por su correo electrónico en la base de datos
-    const login = await Login.findOne({ where: { email } })
+    const login = await Login.findOne({ where: { email } });
     if (!login) {
-      console.log(`User not found for email: ${email}`)
-      return res.status(404).json({ message: 'Usuario no encontrado' })
+      console.log(`User not found for email: ${email}`);
+      return res.status(404).json({ message: 'Usuario no encontrado' });
     }
 
-    // Validar la contraseña ingresada con la contraseña almacenada en la base de datos
-    const isPasswordValid = await bcrypt.compare(password, login.password)
+    const isPasswordValid = await bcrypt.compare(password, login.password);
     if (!isPasswordValid) {
-      console.log(`Invalid password for user: ${email}`)
-      return res.status(401).json({ message: 'Credenciales inválidas' })
+      console.log(`Invalid password for user: ${email}`);
+      return res.status(401).json({ message: 'Credenciales inválidas' });
     }
 
-    // Generar un token JWT con la información del usuario
     const token = jwt.sign(
       { userId: login.UserId, email: login.email },
-      process.env.JWT_SECRET, // Debes definir esta variable de entorno
-      { expiresIn: '1h' } // Opcional: Define el tiempo de expiración del token
-    )
+      process.env.JWT_SECRET, 
+      { expiresIn: '1h' } 
+    );
 
-    console.log(`Login successful for user: ${email}`)
+    const userIdUUID = uuidStringify(login.UserId);
 
-    // Devolver el token JWT como respuesta
-    res.status(200).json({ message: 'Login Correct', token })
+    res.status(200).json({ message: 'Login Correct', token, UserId: userIdUUID, rol: login.RolUserId });
   } catch (error) {
-    console.error('Error al iniciar sesión:', error)
-    res.status(500).json({ message: 'Error interno del servidor' })
+    console.error('Error al iniciar sesión:', error);
+    res.status(500).json({ message: 'Error interno del servidor' });
   }
 }
 
-module.exports = { auth }
+module.exports = { auth };

@@ -7,3 +7,12 @@ Content-Type: application/json
     "email": "user1@example.com",
     "password": "user1password"
 }
+### Get personal info
+GET http://localhost:3001/api/personalInfo/1
+
+### Get personal info by user id
+GET http://localhost:3001/api/personalInfo/user/e4eb3da6-154c-11ef-a1f3-7085c2d4a609
+
+
+### Get Trabajos
+GET http://localhost:3001/api/trabajo

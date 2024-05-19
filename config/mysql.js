@@ -16,7 +16,7 @@ async function connectToDatabase () {
     return connection
   } catch (error) {
     console.error('Error connecting to the MySQL server:', error)
-    throw error // Propagate the error so it can be handled by the caller
+    throw error 
   }
 }
 

@@ -24,8 +24,8 @@ const User = sequelize.define('User', {
   }
 }, {
   timestamps: false,
-  createdAt: 'created_at', // Opcional: cambia el nombre de la columna de fecha de creación
-  updatedAt: 'updated_at' // Opcional: cambia el nombre de la columna de fecha de actualización
+  createdAt: 'created_at',
+  updatedAt: 'updated_at'
 })
 
 module.exports = User
